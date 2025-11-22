@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Message</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h3>Future Planner</h3>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="dream-nodes.html">Dream Notes</a>
+        <a href="future-nodes.html" class="active">Future Message</a>
+    </div>
+
+    <div class="content">
+        <h1>Future Message</h1>
+
+        <textarea 
+            id="futureMsg" 
+            placeholder="Write a message to your future self..." 
+            class="message-box">
+        </textarea>
+
+        <button class="save-btn" onclick="saveMessage()">
+            Save Message
+        </button>
+
+        <!-- Saved Messages Section -->
+        <h2>Saved Messages</h2>
+        <div id="savedMessages" class="saved-container"></div>
+    </div>
+
+   
+    <script src="script.js"></script>
+
+</body>
+</html>

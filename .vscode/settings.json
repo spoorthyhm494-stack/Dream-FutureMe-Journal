@@ -1,0 +1,6 @@
+{
+    "editor.suggest.preview": true,
+    "editor.suggest.shareSuggestSelections": true,
+    "search.searchView.keywordSuggestions": true,
+    "terminal.integrated.suggest.enabled": false
+}
