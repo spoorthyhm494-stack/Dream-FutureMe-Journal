@@ -1,0 +1,32 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "connect mongodb with express",
+  "homepage": "https://github.com/spoorthyhm494-stack/Dream-FutureMe-Journal#readme",
+  "bugs": {
+    "url": "https://github.com/spoorthyhm494-stack/Dream-FutureMe-Journal/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spoorthyhm494-stack/Dream-FutureMe-Journal.git"
+  },
+  "license": "ISC",
+  "author": "Spoorthy",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.20.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}
