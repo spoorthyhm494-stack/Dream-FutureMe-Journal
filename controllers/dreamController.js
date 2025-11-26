@@ -2,8 +2,11 @@ import Dream from "../models/Dream.js";
 
 export const createDream = async (req, res) => {
   try {
-    console.log("TOKEN USER:", req.user);
     const { title, description, emotions } = req.body;
+    
+    if (!title || !description) {
+      return res.status(400).json({ message: "Title and description are required" });
+    }
 
     const dream = await Dream.create({
       userId: req.user.id,
@@ -25,6 +28,28 @@ export const getDreams = async (req, res) => {
     return res.json({ dreams });
   } catch (err) {
     console.error("GET DREAMS ERROR:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const updateDream = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, emotions } = req.body;
+
+    const dream = await Dream.findOneAndUpdate(
+      { _id: id, userId: req.user.id },
+      { title, description, emotions },
+      { new: true }
+    );
+
+    if (!dream) {
+      return res.status(404).json({ message: "Dream not found" });
+    }
+
+    return res.json({ message: "Dream updated", dream });
+  } catch (err) {
+    console.error("UPDATE DREAM ERROR:", err);
     return res.status(500).json({ message: "Server error" });
   }
 };

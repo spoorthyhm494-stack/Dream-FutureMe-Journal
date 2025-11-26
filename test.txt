@@ -1,0 +1,92 @@
+// visit this to check the stored data
+https://cloud.mongodb.com/v2/691df7a739fb2c29a0cb71ac#/metrics/replicaSet/691df83b5db94a1e2e2da64c/explorer/devtrackDB/users/find
+
+http://localhost:5000 
+
+//Auth Routes API's
+
+POST /api/auth/signup
+
+POST /api/auth/login     // the backend is running here
+
+//check the signup API in postman
+http://localhost:5000/api/auth/signup
+
+input: 
+{
+  "name": "Vikki",
+  "email": "vikki@test.com",
+  "password": "123456"
+}
+{
+  "name": "sonu",
+  "email": "sonu@test.com",
+  "password": "56789"
+}
+
+output:
+{ "message": "Signup successful" }
+
+//check the login API in postman
+http://localhost:5000/api/auth/login
+
+input:
+{
+  "email": "vikki@test.com",
+  "password": "123456"
+}
+
+{
+  "email": "sonu@test.com",
+  "password": "56789"
+}
+output:
+{
+  "message": "Login successful",
+  "token": "eyJhbGciOi..."
+}
+ "message": "Login successful",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MjZkZjg4NzE1OTdlMjNhZmM4MTczMCIsImlhdCI6MTc2NDE1NTM1MiwiZXhwIjoxNzY0NzYwMTUyfQ.wT-zTMD1VTL_s14ecVgxYq9YpNgjvyg5_9-KB8b9b5w",
+
+//ALL DREAM API'S
+1.POST /api/dream/create
+
+2.GET /api/dream/all
+
+3.DELETE /api/dream/:id
+
+4.PUT http://localhost:5000/api/dream/DREAM_ID
+4.POST /api/roadmap
+
+5.GET /api/roadmap
+
+
+//to check dream create API 
+http://localhost:5000/api/dream/create
+
+input :(post)
+
+Headers:  
+Authorization: bearer
+                <token from login>
+(in body)
+{
+  "title": "Flying Dream",
+  "description": "I was flying over mountains",
+  "emotions": ["happy", "excited"]
+}
+
+//to get all dreams
+http://localhost:5000/api/dream/all
+input :(get)
+Headers:
+Authorization: bearer <token from login>
+ex: 
+Authorization: bearer
+               eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MjcxYmYxZWIyMWI3NjIzZmU5YTg4YiIsImlhdCI6MTc2NDE3MTYwMywiZXhwIjoxNzY0Nzc2NDAzfQ.cCNtnMU_SiFp7YwsdWWlJlwd9IR0LYaCLPPetKxWCks
+
+//to delete dream 
+http://localhost:5000/api/dream/DREAM_ID(u have to give ur id)
+
+Headers: Authorization: Bearer YOUR_JWT_TOKEN
+//roadmap API
