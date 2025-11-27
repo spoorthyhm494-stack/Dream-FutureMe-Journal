@@ -9,6 +9,8 @@ import express from "express";
 import authRoutes from "./routes/authRoutes.js";
 import dreamRoutes from "./routes/dreamRoutes.js";
 import roadmapRoutes from "./routes/roadmapRoutes.js";
+import futureMessageRoutes from "./routes/futureMessageRoutes.js";
+
 
 const app = express();
 
@@ -34,6 +36,8 @@ app.post("/echo", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/dream", dreamRoutes);
 app.use("/api/roadmap", roadmapRoutes);
+app.use("/api/future", futureMessageRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 

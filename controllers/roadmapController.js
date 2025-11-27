@@ -2,8 +2,15 @@ import Roadmap from "../models/Roadmap.js";
 
 export const createRoadmap = async (req, res) => {
   try {
+    const { goal, steps } = req.body;
+    
+    if (!goal) {
+      return res.status(400).json({ message: "Goal is required" });
+    }
+
     const payload = { ...req.body, userId: req.user.id };
     const existing = await Roadmap.findOne({ userId: req.user.id });
+    
     if (existing) {
       existing.goal = payload.goal || existing.goal;
       existing.steps = payload.steps || existing.steps;
@@ -11,6 +18,7 @@ export const createRoadmap = async (req, res) => {
       await existing.save();
       return res.json({ message: "Roadmap updated", roadmap: existing });
     }
+    
     const roadmap = await Roadmap.create(payload);
     return res.status(201).json({ message: "Roadmap created", roadmap });
   } catch (err) {
@@ -28,4 +36,3 @@ export const getRoadmap = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
-

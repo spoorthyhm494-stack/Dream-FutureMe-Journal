@@ -7,6 +7,11 @@ const futureMessageSchema = new mongoose.Schema({
     required: true,
   },
 
+  title: {
+    type: String,
+    required: true,
+  },
+
   message: {
     type: String,
     required: true,
@@ -17,15 +22,25 @@ const futureMessageSchema = new mongoose.Schema({
     required: true,
   },
 
+  isUnlocked: {
+    type: Boolean,
+    default: false,
+  },
+
+  sendEmail: {
+    type: Boolean,
+    default: false,
+  },
+
+  delivered: {
+    type: Boolean,
+    default: false,
+  },
+
   createdAt: {
     type: Date,
     default: Date.now,
   },
-
-  opened: {
-    type: Boolean,
-    default: false,
-  }
 });
 
 const FutureMessage = mongoose.model("FutureMessage", futureMessageSchema);

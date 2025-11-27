@@ -2,7 +2,7 @@ import express from "express";
 import {
   createFutureMessage,
   getFutureMessages,
-} from "../controllers/futureMessageController.js";
+} from "../controllers/futureMessageRoutes.js";
 import authMiddleware from "../utils/authMiddleware.js";
 
 const router = express.Router();
