@@ -22,36 +22,6 @@ const dreamSchema = new mongoose.Schema({
     default: [],
   },
 
-  //  NEW FIELD → category (AI detected or user-selected)
-  category: {
-    type: String,
-    default: "general",
-  },
-
-  // NEW FIELD → tags extracted from dream text
-  tags: {
-    type: [String],
-    default: [],
-  },
-
-  // NEW FIELD → sentiment (positive / negative / neutral)
-  sentiment: {
-    type: String,
-    default: "neutral",
-  },
-
-  // NEW FIELD → AI suggestions/tips for the user
-  suggestions: {
-    type: [String],
-    default: [],
-  },
-
-  // NEW FIELD → optional notes for future analytics
-  aiNotes: {
-    type: String,
-    default: "",
-  },
-
   createdAt: {
     type: Date,
     default: Date.now,

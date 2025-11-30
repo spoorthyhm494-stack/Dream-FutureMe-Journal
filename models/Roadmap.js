@@ -14,28 +14,10 @@ const roadmapSchema = new mongoose.Schema({
 
   steps: [
     {
-      stepNumber: { 
-        type: Number, 
-        required: true,
-        set: v => Number(v)   // converts string to number
-      },
-      title: { type: String, required: true },
-      description: { type: String },
-      duration: { type: String },
-      tasks: {
-        daily: [String],
-        weekly: [String],
-      },
-      tools: [String],
-      resources: {
-        youtube: [String],
-        courses: [String],
-      },
+      title: String,
       completed: { type: Boolean, default: false },
     }
   ],
-
-  finalChecklist: [String],
 
   createdAt: {
     type: Date,
@@ -43,4 +25,5 @@ const roadmapSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("Roadmap", roadmapSchema);
+const Roadmap = mongoose.model("Roadmap", roadmapSchema);
+export default Roadmap;
