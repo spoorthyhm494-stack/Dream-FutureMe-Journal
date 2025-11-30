@@ -1,43 +1,27 @@
 {
   "name": "devtrack-backend",
   "version": "1.0.0",
-  "description": "Dream &amp; FutureMe Journal is an AI-powered platform that helps users understand their dreams, track emotions, and plan their goals. It offers dream interpretations, a smart journal for pattern tracking, personalized learning roadmaps, and future messages that unlock on a chosen date.",
-    "main": "server.js",
+  "description": "Dream & FutureMe Journal backend",
+  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/spoorthyhm494-stack/Dream-FutureMe-Journal.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-   "type": "module",
-  "bugs": {
-    "url": "https://github.com/spoorthyhm494-stack/Dream-FutureMe-Journal/issues"
-  },
-  "homepage": "https://github.com/spoorthyhm494-stack/Dream-FutureMe-Journal#readme",
   "dependencies": {
-<<<<<<< HEAD
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "mongoose": "^9.0.0"
-=======
     "@google/generative-ai": "^0.24.1",
     "axios": "^1.13.2",
     "bcryptjs": "^3.0.3",
+    "body-parser": "^2.2.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "groq-sdk": "^0.37.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.20.0",
+    "mongoose": "^8.20.1",
     "openai": "^6.9.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
->>>>>>> spoo-backend
   }
 }

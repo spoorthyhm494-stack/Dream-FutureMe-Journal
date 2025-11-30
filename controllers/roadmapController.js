@@ -6,27 +6,6 @@ import Roadmap from "../models/Roadmap.js";
 // -------------------------
 export const generateRoadmap = async (req, res) => {
   try {
-<<<<<<< HEAD
-    const { goal, steps } = req.body;
-    
-    if (!goal) {
-      return res.status(400).json({ message: "Goal is required" });
-    }
-
-    const payload = { ...req.body, userId: req.user.id };
-    const existing = await Roadmap.findOne({ userId: req.user.id });
-    
-    if (existing) {
-      existing.goal = payload.goal || existing.goal;
-      existing.steps = payload.steps || existing.steps;
-      existing.progressPercent = payload.progressPercent ?? existing.progressPercent;
-      await existing.save();
-      return res.json({ message: "Roadmap updated", roadmap: existing });
-    }
-    
-    const roadmap = await Roadmap.create(payload);
-    return res.status(201).json({ message: "Roadmap created", roadmap });
-=======
     const { goal } = req.body;
     const userId = req.user.id;
 
@@ -34,13 +13,8 @@ export const generateRoadmap = async (req, res) => {
       return res.status(400).json({ message: "Goal is required" });
     }
 
-    // -------------------------
-    // 1️⃣ Ask Gemini 2.0 Flash (Free)
-    // -------------------------
     const prompt = `
-Generate a detailed roadmap for the goal: "${goal}".
-Return ONLY clean JSON in this exact structure:
-
+Generate a detailed roadmap for the goal: "${goal}". Return ONLY JSON:
 {
   "steps": [
     {
@@ -49,65 +23,54 @@ Return ONLY clean JSON in this exact structure:
       "description": "Short explanation",
       "duration": "2 weeks",
       "tasks": {
-        "daily": ["Task 1", "Task 2"],
-        "weekly": ["Task 1", "Task 2"]
+        "daily": ["Task 1","Task 2"],
+        "weekly": ["Task 1","Task 2"]
       },
-      "tools": ["Tool 1", "Tool 2"],
+      "tools": ["Tool 1"],
       "resources": {
-        "youtube": ["Link 1", "Link 2"],
-        "courses": ["Link 1", "Link 2"]
+        "youtube": [],
+        "courses": []
       },
       "completed": false
     }
   ],
-  "finalChecklist": ["Checklist item 1", "Checklist item 2"]
+  "finalChecklist": ["Checklist item 1"]
 }
-ONLY RETURN JSON. No extra text.
 `;
 
     const aiResponse = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
         model: "google/gemini-2.0-flash-exp:free",
-        messages: [{ role: "user", content: prompt }]
+        messages: [{ role: "user", content: prompt }],
       },
       {
         headers: {
-          "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json"
-        }
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        },
       }
     );
 
-    const rawOutput = aiResponse.data.choices[0].message.content;
-
     let roadmapJSON;
     try {
-      roadmapJSON = JSON.parse(rawOutput);
+      roadmapJSON = JSON.parse(aiResponse.data.choices[0].message.content);
     } catch (err) {
-      console.error("AI JSON ERROR:", rawOutput);
-      return res.status(500).json({ message: "AI returned invalid JSON" });
+      return res.status(500).json({
+        message: "AI returned invalid JSON",
+        raw: aiResponse.data.choices[0].message.content,
+      });
     }
 
-    // -------------------------
-    // 2️⃣ Save into database
-    // -------------------------
     const newRoadmap = await Roadmap.create({
       userId,
       goal,
-      steps: roadmapJSON.steps || [],
-      finalChecklist: roadmapJSON.finalChecklist || [],
-      createdAt: new Date()
+      steps: roadmapJSON.steps,
+      finalChecklist: roadmapJSON.finalChecklist,
     });
 
-    return res.status(201).json({
-      message: "Roadmap created successfully",
-      roadmap: newRoadmap
-    });
-
->>>>>>> spoo-backend
+    return res.status(201).json({ roadmap: newRoadmap });
   } catch (err) {
-    console.error("ROADMAP ERROR:", err.response?.data || err);
+    console.error("ROADMAP ERROR:", err);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -117,20 +80,14 @@ ONLY RETURN JSON. No extra text.
 // -------------------------
 export const getRoadmap = async (req, res) => {
   try {
-<<<<<<< HEAD
-    const roadmap = await Roadmap.findOne({ userId: req.user.id });
-=======
-    const userId = req.user.id;
-    const roadmap = await Roadmap.find({ userId }).sort({ createdAt: -1 });
->>>>>>> spoo-backend
+    const roadmap = await Roadmap.find({ userId: req.user.id }).sort({
+      createdAt: -1,
+    });
     return res.json({ roadmap });
   } catch (err) {
-    console.error("GET ROADMAP ERROR:", err);
     return res.status(500).json({ message: "Server error" });
   }
 };
-<<<<<<< HEAD
-=======
 
 // -------------------------
 // UPDATE ROADMAP STEP
@@ -147,18 +104,17 @@ export const updateRoadmapStep = async (req, res) => {
 
     await roadmap.save();
 
-    const completed = roadmap.steps.filter(s => s.completed).length;
-    const total = roadmap.steps.length;
-    const percent = Math.round((completed / total) * 100);
+    const completed = roadmap.steps.filter((s) => s.completed).length;
+    const percent = Math.round((completed / roadmap.steps.length) * 100);
 
-    return res.json({
-      message: "Step updated",
-      roadmap,
-      progress: percent + "%"
-    });
+    return res.json({ roadmap, progress: percent });
   } catch (err) {
-    console.error("UPDATE STEP ERROR:", err);
     return res.status(500).json({ message: "Server error" });
   }
 };
->>>>>>> spoo-backend
+
+// DEBUG ROUTE
+export const debugRoadmaps = async (req, res) => {
+  const all = await Roadmap.find();
+  res.json(all);
+};
