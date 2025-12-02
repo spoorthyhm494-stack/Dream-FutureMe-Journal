@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css"> 
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --color-primary: #5c67f2;
+            --color-secondary: #ff7e5f;
+            --color-text-dark: #333;
+            --color-bg-light: #ffffff;
+            --color-bg-gray: #f4f7f6;
+            --color-complete: #28a745;
+            --color-progress: #ffc107;
+            --color-todo: #6c757d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .navbar {
+            background: rgba(92, 103, 242, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .progress-container {
+            padding: 4rem 0;
+            min-height: 80vh;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .progress-container h2 {
+            margin-bottom: 1rem;
+            color: white;
+            text-align: center;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            animation: titlePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { 
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.3);
+                transform: scale(1);
+            }
+            50% { 
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2), 0 0 40px rgba(255, 255, 255, 0.5);
+                transform: scale(1.02);
+            }
+        }
+
+        .progress-container > .container > p {
+            text-align: center;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        #task-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            padding: 20px 0;
+        }
+
+        .task-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-top: 5px solid var(--color-primary);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: cardSlideIn 0.6s ease-out forwards;
+        }
+
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.6s;
+        }
+
+        .task-card:hover::before {
+            left: 100%;
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .task-card:nth-child(1) { animation-delay: 0.1s; }
+        .task-card:nth-child(2) { animation-delay: 0.2s; }
+        .task-card:nth-child(3) { animation-delay: 0.3s; }
+        .task-card:nth-child(4) { animation-delay: 0.4s; }
+        .task-card:nth-child(5) { animation-delay: 0.5s; }
+        .task-card:nth-child(6) { animation-delay: 0.6s; }
+
+        .task-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .task-card h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: var(--color-text-dark);
+            font-size: 1.3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .task-card p {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+            animation: badgePop 0.4s ease-out;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes badgePop {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .status-todo {
+            background: linear-gradient(135deg, #e9ecef, #dee2e6);
+            color: var(--color-todo);
+        }
+
+        .status-in-progress {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            color: #856404;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+            }
+            50% {
+                box-shadow: 0 2px 15px rgba(255, 193, 7, 0.6);
+            }
+        }
+
+        .status-complete {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: var(--color-complete);
+            animation: successGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes successGlow {
+            0%, 100% {
+                box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+            }
+            50% {
+                box-shadow: 0 2px 15px rgba(40, 167, 69, 0.6);
+            }
+        }
+
+        .progress-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--color-text-dark);
+            margin-bottom: 8px;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-bar-container {
+            height: 12px;
+            background-color: rgba(240, 240, 240, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 8px;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        .progress-bar {
+            height: 100%;
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border-radius: 10px;
+            animation: progressShine 2s ease-in-out infinite;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes progressShine {
+            0%, 100% {
+                filter: brightness(1);
+            }
+            50% {
+                filter: brightness(1.1);
+            }
+        }
+
+        .bg-complete {
+            background: linear-gradient(90deg, #28a745, #34ce57);
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.4);
+        }
+
+        .bg-progress {
+            background: linear-gradient(90deg, #ffc107, #ffdb4d);
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.4);
+        }
+
+        .bg-todo {
+            background: linear-gradient(90deg, #6c757d, #8894a0);
+            box-shadow: 0 2px 8px rgba(108, 117, 125, 0.4);
+        }
+
+        .particle {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: floatParticle 15s infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .stats-overview {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            animation: fadeIn 0.8s ease-out 0.4s both;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            min-width: 150px;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            #task-dashboard {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .progress-container h2 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .task-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">DreamDecoder</a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-item">Home</a>
+                <a href="dreamnote.html" class="nav-item">Dream Note</a>
+                <a href="decoder.html" class="nav-item">Dream Decoder</a>
+                <a href="futureme.html" class="nav-item">FutureMe</a>
+                <a href="journal.html" class="nav-item">Journal</a>
+                <a href="roadmap.html" class="nav-item">Roadmap</a>
+                <a href="progress.html" class="nav-item active">Progress</a>
+                <a href="settings.html" class="nav-item">Settings</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="progress-container">
+        <div class="container">
+            <h2>📊 Project Progress Tracker</h2>
+            <p>Visualize the status and completion percentage of key project tasks from the roadmap.</p>
+            
+            <div class="stats-overview" id="stats-overview"></div>
+            
+            <div id="task-dashboard"></div>
+        </div>
+    </main>
+
+    <script>
+        function createParticles() {
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                document.body.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        const projectTasks = [
+            { id: 1, title: "P1: Core App Flow Setup", description: "Login, navigation, and core UI scaffolding.", status: "Complete", progress: 100 },
+            { id: 2, title: "P2: Dream Note Integration", description: "Design and implement the Dream Note data entry page.", status: "In Progress", progress: 75 },
+            { id: 3, title: "P3: Settings & Preferences", description: "Implement theme toggle and notification options.", status: "In Progress", progress: 40 },
+            { id: 4, title: "P4: AI Decoder API Integration", description: "Connect the decoder page to the Gemini API for analysis.", status: "To Do", progress: 0 },
+            { id: 5, title: "P5: FutureMe Scheduling Logic", description: "Develop logic for delayed message delivery and retrieval.", status: "To Do", progress: 0 },
+            { id: 6, title: "P6: Journal Data Export", description: "Implement button to download all user data as JSON.", status: "Complete", progress: 100 },
+        ];
+
+        function calculateStats() {
+            const total = projectTasks.length;
+            const completed = projectTasks.filter(t => t.status === "Complete").length;
+            const inProgress = projectTasks.filter(t => t.status === "In Progress").length;
+            const avgProgress = Math.round(projectTasks.reduce((sum, t) => sum + t.progress, 0) / total);
+
+            return { total, completed, inProgress, avgProgress };
+        }
+
+        function renderStats() {
+            const stats = calculateStats();
+            const statsContainer = document.getElementById('stats-overview');
+            
+            statsContainer.innerHTML = `
+                <div class="stat-box">
+                    <span class="stat-number">${stats.total}</span>
+                    <span class="stat-label">Total Tasks</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">${stats.completed}</span>
+                    <span class="stat-label">Completed</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">${stats.inProgress}</span>
+                    <span class="stat-label">In Progress</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">${stats.avgProgress}%</span>
+                    <span class="stat-label">Avg Progress</span>
+                </div>
+            `;
+        }
+
+        function renderTasks() {
+            const dashboard = document.getElementById('task-dashboard');
+            dashboard.innerHTML = '';
+
+            projectTasks.forEach(task => {
+                const statusClass = task.status.toLowerCase().replace(' ', '-');
+                const progressColorClass = getProgressColorClass(task.status);
+
+                const taskHTML = `
+                    <div class="task-card">
+                        <span class="status-badge status-${statusClass}">${task.status}</span>
+                        <h3>${task.title}</h3>
+                        <p>${task.description}</p>
+                        
+                        <label class="progress-label">Progress: ${task.progress}%</label>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar ${progressColorClass}" style="width: ${task.progress}%;"></div>
+                        </div>
+                    </div>
+                `;
+                dashboard.innerHTML += taskHTML;
+            });
+        }
+
+        function getProgressColorClass(status) {
+            switch (status) {
+                case "Complete":
+                    return "bg-complete";
+                case "In Progress":
+                    return "bg-progress";
+                case "To Do":
+                    return "bg-todo";
+                default:
+                    return "bg-todo";
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderStats();
+            renderTasks();
+        });
+    </script>
+</body>
+</html>

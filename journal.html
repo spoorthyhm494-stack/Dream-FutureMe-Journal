@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream Journal - Past Entries</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background: #0a0a0a;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(-45deg, #8e44ad, #3498db, #e91e63, #f39c12, #1abc9c);
+            background-size: 400% 400%;
+            animation: gradientMove 18s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .floating-page {
+            position: fixed;
+            font-size: 3rem;
+            opacity: 0.15;
+            pointer-events: none;
+            animation: floatPage 25s linear infinite;
+        }
+
+        @keyframes floatPage {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.2;
+            }
+            90% {
+                opacity: 0.2;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: #8e44ad;
+            top: 10%;
+            left: 10%;
+            animation: floatOrb 15s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 450px;
+            height: 450px;
+            background: #e91e63;
+            bottom: 10%;
+            right: 10%;
+            animation: floatOrb 18s ease-in-out infinite reverse;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: #1abc9c;
+            top: 50%;
+            left: 50%;
+            animation: floatOrb 20s ease-in-out infinite;
+        }
+
+        @keyframes floatOrb {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(100px, -80px) scale(1.2);
+            }
+            66% {
+                transform: translate(-80px, 80px) scale(0.8);
+            }
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 1.2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideDown 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .nav-item:hover::before,
+        .nav-item.active::before {
+            width: 100%;
+        }
+
+        .journal-container {
+            padding: 4rem 0;
+            min-height: 80vh;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-size: 3.5rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% {
+                text-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                text-shadow: 0 0 60px rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        .container > p {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .search-bar input {
+            flex-grow: 1;
+            padding: 1.2rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.4s ease;
+            color: #333;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: transparent;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5),
+                        0 10px 40px rgba(142, 68, 173, 0.4);
+            transform: translateY(-3px);
+            background: white;
+        }
+
+        .btn {
+            padding: 1.2rem 3rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8e44ad, #3498db, #e91e63);
+            background-size: 200%;
+            color: white;
+            box-shadow: 0 15px 40px rgba(142, 68, 173, 0.5);
+            animation: buttonPulse 2s ease infinite;
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% {
+                box-shadow: 0 15px 40px rgba(142, 68, 173, 0.5);
+            }
+            50% {
+                box-shadow: 0 20px 50px rgba(142, 68, 173, 0.7);
+            }
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.02);
+            background-position: 100%;
+        }
+
+        .dream-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .dream-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            border-radius: 25px;
+            border-left: 5px solid #8e44ad;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            cursor: pointer;
+            animation: cardSlideIn 0.6s ease both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .dream-card::before {
+            content: '📖';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2.5rem;
+            opacity: 0.2;
+            animation: bookFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes bookFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .dream-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+            border-left-color: #e91e63;
+        }
+
+        .dream-card h4 {
+            color: white;
+            margin-bottom: 0.8rem;
+            font-size: 1.4rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .dream-card small {
+            display: block;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .emotional-tag {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #8e44ad, #3498db);
+            box-shadow: 0 4px 15px rgba(142, 68, 173, 0.4);
+            animation: tagGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes tagGlow {
+            0%, 100% {
+                box-shadow: 0 4px 15px rgba(142, 68, 173, 0.4);
+            }
+            50% {
+                box-shadow: 0 6px 20px rgba(142, 68, 173, 0.6);
+            }
+        }
+
+        .dream-card p {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            margin: 5% auto;
+            padding: 3rem;
+            border-radius: 30px;
+            width: 85%;
+            max-width: 800px;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5);
+            position: relative;
+            animation: modalSlideIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.7) translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .close-btn {
+            color: #999;
+            float: right;
+            font-size: 2.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: #e91e63;
+            transform: rotate(90deg) scale(1.2);
+        }
+
+        .modal-content h3 {
+            color: #8e44ad;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            margin-top: 0;
+        }
+
+        .modal-content h4 {
+            color: #3498db;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            font-size: 1.3rem;
+        }
+
+        .modal-content small {
+            color: #777;
+            font-size: 1rem;
+        }
+
+        .modal-content p {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .modal-content hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #8e44ad, transparent);
+            margin: 1.5rem 0;
+        }
+
+        .sparkle {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkleFloat 2s ease forwards;
+            z-index: 999;
+        }
+
+        @keyframes sparkleFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-120px) scale(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 2.5rem;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .dream-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 2rem;
+                margin: 10% auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <header class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">DreamDecoder</a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-item">Home</a>
+                <a href="dreamnote.html" class="nav-item">Dream Note</a>
+                <a href="decoder.html" class="nav-item">Dream Decoder</a>
+                <a href="futureme.html" class="nav-item">FutureMe</a>
+                <a href="journal.html" class="nav-item active">Journal</a>
+                <a href="roadmap.html" class="nav-item">Roadmap</a>
+                <a href="progress.html" class="nav-item">Progress</a>
+                <a href="settings.html" class="nav-item">Settings</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="journal-container">
+        <div class="container">
+            <h2>📜 Dream Journal</h2>
+            <p>Your history of dreams, decoded insights, and emotional tracking.</p>
+
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="🔍 Search dreams by title, date, or emotion..." onkeyup="filterDreams()">
+                <button class="btn btn-primary" onclick="filterDreams()">Search</button>
+            </div>
+
+            <div id="dreamGrid" class="dream-grid"></div>
+        </div>
+    </main>
+
+    <div id="dreamModal" class="modal" onclick="if(event.target.id === 'dreamModal') closeModal()">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle">Dream Title</h3>
+            <small id="modalDate"></small>
+            <p><span class="emotional-tag" id="modalTag"></span></p>
+            <hr>
+            <h4>📝 Summary / Analysis:</h4>
+            <p id="modalSummary"></p>
+            <h4>💭 Full Dream Entry:</h4>
+            <p id="modalFullEntry"></p>
+        </div>
+    </div>
+
+    <script>
+        function createFloatingPages() {
+            const pages = ['📖', '📄', '📃', '📋', '📝', '📜'];
+            for (let i = 0; i < 10; i++) {
+                const page = document.createElement('div');
+                page.className = 'floating-page';
+                page.textContent = pages[Math.floor(Math.random() * pages.length)];
+                page.style.left = Math.random() * 100 + '%';
+                page.style.animationDelay = Math.random() * 25 + 's';
+                page.style.animationDuration = (20 + Math.random() * 15) + 's';
+                document.body.appendChild(page);
+            }
+        }
+
+        createFloatingPages();
+
+        let allDreams = [];
+
+        document.addEventListener('DOMContentLoaded', loadDreams);
+
+        function getTagColor(emotion) {
+            emotion = emotion.toLowerCase();
+            if (emotion.includes('happy') || emotion.includes('excited') || emotion.includes('joyful')) 
+                return 'linear-gradient(135deg, #1abc9c, #16a085)';
+            if (emotion.includes('sad') || emotion.includes('anxious') || emotion.includes('worried')) 
+                return 'linear-gradient(135deg, #e74c3c, #c0392b)';
+            if (emotion.includes('confused') || emotion.includes('uncertain')) 
+                return 'linear-gradient(135deg, #95a5a6, #7f8c8d)';
+            if (emotion.includes('peaceful') || emotion.includes('calm')) 
+                return 'linear-gradient(135deg, #3498db, #2980b9)';
+            if (emotion.includes('angry') || emotion.includes('frustrated')) 
+                return 'linear-gradient(135deg, #e67e22, #d35400)';
+            return 'linear-gradient(135deg, #8e44ad, #3498db)';
+        }
+
+        function loadDreams() {
+            allDreams = JSON.parse(localStorage.getItem('savedDreams') || '[]');
+            displayDreams(allDreams);
+        }
+
+        function displayDreams(dreams) {
+            const grid = document.getElementById('dreamGrid');
+            grid.innerHTML = '';
+
+            if (dreams.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: rgba(255,255,255,0.9); font-size: 1.2rem; padding: 4rem;">Your journal is empty. Start logging dreams using the Dream Decoder! ✨</p>';
+                return;
+            }
+
+            dreams.forEach((dream, index) => {
+                const card = document.createElement('div');
+                card.className = 'dream-card';
+                card.style.animationDelay = (index * 0.1) + 's';
+                card.setAttribute('data-dream-id', dream.id);
+                
+                const tagColor = getTagColor(dream.emotion);
+
+                card.innerHTML = `
+                    <h4>${dream.title}</h4>
+                    <small>📅 ${dream.date}</small>
+                    <span class="emotional-tag" style="background: ${tagColor};">${dream.emotion}</span>
+                    <p>${dream.summary || 'Click to view details...'}</p>
+                `;
+                
+                card.addEventListener('click', function() {
+                    openModal(dream.id);
+                });
+
+                grid.appendChild(card);
+
+                card.addEventListener('mouseenter', function() {
+                    for (let i = 0; i < 8; i++) {
+                        setTimeout(() => {
+                            createSparkle(this);
+                        }, i * 50);
+                    }
+                });
+            });
+        }
+
+        function createSparkle(element) {
+            const rect = element.getBoundingClientRect();
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = (rect.left + Math.random() * rect.width) + 'px';
+            sparkle.style.top = (rect.top + Math.random() * rect.height) + 'px';
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 2000);
+        }
+
+        function filterDreams() {
+            const filterValue = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allDreams.filter(dream => {
+                return dream.title.toLowerCase().includes(filterValue) ||
+                       dream.date.toLowerCase().includes(filterValue) ||
+                       dream.emotion.toLowerCase().includes(filterValue) ||
+                       (dream.summary && dream.summary.toLowerCase().includes(filterValue));
+            });
+            displayDreams(filtered);
+
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = Math.random() * window.innerWidth + 'px';
+                    sparkle.style.top = Math.random() * window.innerHeight + 'px';
+                    document.body.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 2000);
+                }, i * 30);
+            }
+        }
+
+        function openModal(dreamId) {
+            const dream = allDreams.find(d => d.id === dreamId);
+            if (!dream) return;
+
+            document.getElementById('modalTitle').textContent = dream.title;
+            document.getElementById('modalDate').textContent = '📅 Date: ' + dream.date;
+            document.getElementById('modalTag').textContent = dream.emotion;
+            document.getElementById('modalTag').style.background = getTagColor(dream.emotion);
+            document.getElementById('modalSummary').textContent = dream.summary || "No detailed summary available.";
+            document.getElementById('modalFullEntry').textContent = dream.fullEntry || "Dream text not stored in this entry.";
+            
+            document.getElementById('dreamModal').style.display = 'block';
+
+            for (let i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = Math.random() * window.innerWidth + 'px';
+                    sparkle.style.top = Math.random() * window.innerHeight + 'px';
+                    document.body.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 2000);
+                }, i * 20);
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('dreamModal');
+            modal.style.animation = 'fadeOut 0.3s ease forwards';
+            setTimeout(() => {
+                modal.style.display = 'none';
+                modal.style.animation = '';
+            }, 300);
+        }
+
+        document.getElementById('searchInput').addEventListener('focus', function() {
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const rect = this.getBoundingClientRect();
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = (rect.left + Math.random() * rect.width) + 'px';
+                    sparkle.style.top = (rect.top + Math.random() * rect.height) + 'px';
+                    document.body.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 2000);
+                }, i * 60);
+            }
+        });
+    </script>
+</body>
+</html>

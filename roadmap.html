@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Roadmap Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* CSS Variables */
+        :root {
+            --color-primary: #5c67f2;
+            --color-secondary: #ff7e5f;
+            --color-accent: #f093fb;
+            --color-text-dark: #333;
+            --color-bg-light: #ffffff;
+            --color-bg-gray: #f4f7f6;
+            --navbar-bg-gradient: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            --header-height: 70px;
+        }
+
+        /* General Styles */
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            line-height: 1.6; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientBackground 15s ease infinite;
+            color: #555; 
+            margin: 0; 
+            padding-top: var(--header-height);
+            min-height: 100vh;
+        }
+        
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container { width: 90%; max-width: 1000px; margin: 0 auto; }
+        
+        /* Navbar Styles */
+        .navbar {
+            background: var(--navbar-bg-gradient);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            height: var(--header-height);
+            transition: all 0.3s ease-in-out;
+            animation: gradientShift 10s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: var(--header-height);
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-bg-light);
+            text-decoration: none;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: logoGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes logoGlow {
+            0%, 100% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); }
+            50% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.3); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-item {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 5px 0;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--color-bg-light);
+            font-weight: 600;
+            transform: translateY(-2px);
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            height: 3px;
+            width: 100%;
+            background: linear-gradient(90deg, #ff7e5f, #f093fb);
+            border-radius: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item:hover::after, .nav-item.active::after {
+            transform: translateX(-50%) scaleX(1);
+            width: calc(100% + 10px);
+        }
+
+        /* Roadmap Layout */
+        .roadmap-container { padding: 4rem 0; min-height: calc(100vh - var(--header-height)); }
+        
+        .roadmap-container h2 { 
+            margin-bottom: 0.5rem; 
+            color: white;
+            text-align: center; 
+            font-size: 2.5rem;
+            animation: fadeInBounce 1s ease-out;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        @keyframes fadeInBounce {
+            0% { opacity: 0; transform: translateY(-30px) scale(0.9); }
+            60% { transform: translateY(5px) scale(1.02); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        .roadmap-container p.goal-summary { 
+            text-align: center; 
+            margin-bottom: 2rem; 
+            font-style: italic; 
+            color: white;
+            font-size: 1.1rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease-out 0.3s backwards;
+        }
+        
+        /* Phase Styling */
+        .phase { 
+            margin-bottom: 3rem; 
+            padding: 2rem; 
+            border-left: 6px solid transparent;
+            background: linear-gradient(135deg, #ffffff 0%, #fef9ff 100%);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: all 0.4s ease;
+            opacity: 0;
+            animation: slideInUp 0.8s ease-out forwards;
+            position: relative;
+            overflow: hidden;
+            color: black;
+        }
+        
+        .phase::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+        
+        .phase:hover::before {
+            left: 100%;
+        }
+        
+        .phase:nth-child(odd) {
+            border-left-color: #ff7e5f;
+        }
+        
+        .phase:nth-child(even) {
+            border-left-color: #667eea;
+        }
+        
+        .phase:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .phase h3 { 
+            color: var(--color-text-dark); 
+            font-size: 1.7rem; 
+            border-bottom: 3px solid;
+            border-image: linear-gradient(90deg, #667eea, #764ba2, #f093fb) 1;
+            padding-bottom: 0.7rem; 
+            margin-bottom: 1rem; 
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Table Styling */
+        .feature-table { 
+            width: 100%; 
+            border-collapse: separate; 
+            border-spacing: 0 8px; 
+            margin-top: 1rem; 
+        }
+        
+        .feature-table th, .feature-table td { 
+            padding: 1rem; 
+            text-align: left; 
+        }
+        
+        .feature-table th { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-weight: 600; 
+            color: white;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            animation: headerPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes headerPulse {
+            0%, 100% { box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3); }
+            50% { box-shadow: 0 6px 15px rgba(102, 126, 234, 0.5); }
+        }
+        
+        .feature-table tr:nth-child(even) td { 
+            background: linear-gradient(135deg, #f8f9ff 0%, #fff5f8 100%);
+        }
+        
+        .feature-table tr:nth-child(odd) td { 
+            background: linear-gradient(135deg, #fffbf5 0%, #f5f8ff 100%);
+        }
+        
+        .feature-table tr:hover td {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Importance Highlighting */
+        .importance-high { 
+            font-weight: 700; 
+            color: white;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            padding: 4px 12px; 
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .importance-medium { 
+            font-weight: 600; 
+            color: white;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            padding: 4px 12px; 
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(243, 156, 18, 0.4);
+            animation: pulse 2s ease-in-out infinite 0.5s;
+        }
+        
+        .importance-low { 
+            color: white;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            padding: 4px 12px; 
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.4);
+            animation: pulse 2s ease-in-out infinite 1s;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* User Input Form Styles */
+        #input-form { 
+            padding: 2.5rem; 
+            border: none; 
+            border-radius: 20px; 
+            margin-bottom: 3rem; 
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(249, 249, 255, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: 1fr 1fr;
+            animation: fadeInScale 1s ease-out 0.2s backwards;
+        }
+        
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .form-group { 
+            display: flex; 
+            flex-direction: column;
+            animation: slideInLeft 0.6s ease-out backwards;
+        }
+        
+        .form-group:nth-child(1) { animation-delay: 0.3s; }
+        .form-group:nth-child(2) { animation-delay: 0.4s; }
+        .form-group:nth-child(3) { animation-delay: 0.5s; }
+        .form-group:nth-child(4) { animation-delay: 0.6s; }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        label { 
+            font-weight: 600; 
+            margin-bottom: 0.5rem; 
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        input, select { 
+            padding: 12px; 
+            border: 2px solid #ddd; 
+            border-radius: 10px; 
+            font-size: 1rem; 
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: transparent;
+            background: linear-gradient(white, white) padding-box,
+                        linear-gradient(90deg, #667eea, #764ba2) border-box;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        #generate-button {
+            grid-column: 1 / -1; 
+            padding: 18px 20px; 
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 200% auto;
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+            transition: all 0.4s ease;
+            animation: buttonGlow 2s ease-in-out infinite, fadeInScale 1s ease-out 0.7s backwards;
+        }
+        
+        @keyframes buttonGlow {
+            0%, 100% { box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5); }
+            50% { box-shadow: 0 8px 30px rgba(102, 126, 234, 0.8), 0 0 20px rgba(240, 147, 251, 0.5); }
+        }
+        
+        #generate-button:hover { 
+            background-position: right center;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.7);
+        }
+        
+        #generate-button:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        /* Loading State & Animations */
+        #roadmap-content { 
+            min-height: 200px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-size: 1.2rem; 
+            color: white;
+            text-align: center;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .fa-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #input-form {
+                grid-template-columns: 1fr;
+                padding: 1.5rem;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: var(--header-height);
+                left: 0;
+                width: 100%;
+                background: #667eea;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                padding: 1rem 0;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .nav-item {
+                padding: 10px 20px;
+                text-align: center;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            .nav-item::after {
+                content: none;
+            }
+        }
+
+        /* Staggered animation for roadmap phases */
+        .phase:nth-child(1) { animation-delay: 0.1s; }
+        .phase:nth-child(2) { animation-delay: 0.3s; }
+        .phase:nth-child(3) { animation-delay: 0.5s; }
+        .phase:nth-child(4) { animation-delay: 0.7s; }
+    </style>
+</head>
+<body>
+    
+    <header class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">DreamDecoder</a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-item">Home</a>
+                <a href="dreamnote.html" class="nav-item">Dream Note</a>
+                <a href="decoder.html" class="nav-item">Dream Decoder</a>
+                <a href="futureme.html" class="nav-item">FutureMe</a>
+                <a href="journal.html" class="nav-item">Journal</a>
+                <a href="roadmap.html" class="nav-item active">Roadmap</a>
+                <a href="progress.html" class="nav-item">Progress</a>
+                <a href="settings.html" class="nav-item">Settings</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="roadmap-container">
+        <div class="container">
+            <h2 id="roadmap-title"><i class="fas fa-route"></i> Personalized Learning Path Generator</h2>
+            <p class="goal-summary" id="roadmap-summary">Enter your details below to instantly generate a structured roadmap tailored to your goals.</p>
+
+            <div id="input-form">
+                <div class="form-group">
+                    <label for="goal-topic">🎯 Goal / Topic (e.g., Data Scientist, Web Developer)</label>
+                    <input type="text" id="goal-topic" value="Data Structures and Algorithms (DSA)">
+                </div>
+                <div class="form-group">
+                    <label for="current-level">🧠 Current Level</label>
+                    <select id="current-level">
+                        <option value="Beginner">Beginner / No experience</option>
+                        <option value="Intermediate" selected>Intermediate / Some knowledge</option>
+                        <option value="Advanced">Advanced / Professional</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="timeline">🗓️ Target Timeline</label>
+                    <input type="text" id="timeline" value="6 Months (Aggressive)">
+                </div>
+                <div class="form-group">
+                    <label for="description">📝 Brief Description</label>
+                    <input type="text" id="description" value="Focus on technical interview preparation.">
+                </div>
+                <button id="generate-button" onclick="handleRoadmapGeneration()">Generate Roadmap</button>
+            </div>
+            
+            <div id="roadmap-content">
+                Enter your goal details and click "Generate Roadmap" to begin.
+            </div>
+        </div>
+    </main>
+
+    <script>
+        /**
+         * Simulates the AI/backend process by collecting user input and returning structured data.
+         */
+        function generateAIData(goal, level, timeline, description) {
+            return {
+                goal: goal,
+                level: level,
+                timeline: timeline,
+                description: description || `A structured learning path for ${goal}, tailored for a ${level} level over ${timeline}.`,
+                phases: [
+                    {
+                        title: "Fundamentals & Core Logic (Weeks 1-8)",
+                        description: "Establish strong foundational skills, including syntax and fundamental concepts. Start with time complexity analysis immediately.",
+                        features: [
+                            { name: "P1.1 Programming Language", description: `Master the chosen language (e.g., Python/Java) based on ${goal} needs.`, importance: "High" },
+                            { name: "P1.2 Core Concepts", description: "Variables, Functions, Loops, Conditionals, Basic OOP.", importance: "High" },
+                            { name: "P1.3 Time & Space Complexity", description: "Learn Big O notation. Essential for interview preparation.", importance: "High" },
+                            { name: "P1.4 Simple DS", description: "Arrays, Strings, Stacks, Queues.", importance: "Medium" }
+                        ]
+                    },
+                    {
+                        title: "Intermediate Structures & Algorithms (Weeks 9-16)",
+                        description: `Deep dive into the core data structures and common algorithms relevant to ${goal}.`,
+                        features: [
+                            { name: "P2.1 Hashing & Maps", description: "Focus on Hash Maps and Hash Sets. Key for fast lookups.", importance: "High" },
+                            { name: "P2.2 Trees & Heaps", description: "Binary Search Trees, Traversal (In/Pre/Post Order), Heaps (Priority Queue).", importance: "High" },
+                            { name: "P2.3 Recursion & Backtracking", description: "Master recursive thinking and state-space search.", importance: "Medium" },
+                            { name: "P2.4 Project 1 (Mini-App)", description: "Implement a basic dictionary or task manager using Hashing/Trees.", importance: "Medium" }
+                        ]
+                    },
+                    {
+                        title: "Advanced Topics & Portfolio (Weeks 17-24)",
+                        description: "Focus on complex algorithms, graph theory, system design, and building a professional portfolio.",
+                        features: [
+                            { name: "P3.1 Graph Algorithms", description: "BFS, DFS, Dijkstra's, Floyd-Warshall. High importance for interviews.", importance: "High" },
+                            { name: "P3.2 Dynamic Programming (DP)", description: "Understand memoization and tabulation. Practice 1D and 2D DP problems.", importance: "High" },
+                            { name: "P3.3 System Design", description: "Learn scalability, load balancing, and database design concepts.", importance: "Medium" },
+                            { name: "P3.4 Mock Interviews", description: "Conduct weekly mock interviews and track progress on LeetCode/HackerRank.", importance: "High" }
+                        ]
+                    }
+                ]
+            };
+        }
+
+        /**
+         * Handles button click, retrieves user input, and triggers the loading process.
+         */
+        function handleRoadmapGeneration() {
+            const goal = document.getElementById('goal-topic').value || "Undefined Goal";
+            const level = document.getElementById('current-level').value;
+            const timeline = document.getElementById('timeline').value || "Unknown";
+            const description = document.getElementById('description').value;
+
+            const contentDiv = document.getElementById('roadmap-content');
+            
+            // Show loading state
+            contentDiv.innerHTML = `<i class="fas fa-spinner"></i> Generating personalized roadmap for <strong>${goal}</strong>...`;
+
+            // Simulate AI/Network delay (1 second)
+            setTimeout(() => {
+                const data = generateAIData(goal, level, timeline, description);
+                loadRoadmap(data);
+            }, 1000);
+        }
+
+        /**
+         * Renders the roadmap dynamically based on the structured data object.
+         */
+        function loadRoadmap(data) {
+            const contentDiv = document.getElementById('roadmap-content');
+            
+            // 1. Update Title and Summary
+            document.getElementById('roadmap-title').innerHTML = `🚀 Roadmap: ${data.goal}`;
+            document.getElementById('roadmap-summary').innerHTML = `<strong>Level:</strong> ${data.level} | <strong>Timeline:</strong> ${data.timeline} <br> ${data.description}`;
+            
+            // 2. Clear placeholder content
+            contentDiv.innerHTML = ''; 
+
+            // 3. Iterate through phases and build the HTML
+            data.phases.forEach((phase, phaseIndex) => {
+                let phaseHTML = `
+                    <div class="phase">
+                        <h3>Phase ${phaseIndex + 1}: ${phase.title}</h3>
+                        <p>${phase.description}</p>
+                        <table class="feature-table">
+                            <thead>
+                                <tr><th>Topic/Concept</th><th>Focus/Practice</th><th>Importance</th></tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                // Build table rows for features
+                phase.features.forEach(feature => {
+                    const importanceClass = 'importance-' + feature.importance.toLowerCase(); 
+                    
+                    phaseHTML += `
+                        <tr>
+                            <td>${feature.name}</td>
+                            <td>${feature.description}</td>
+                            <td><span class="${importanceClass}">${feature.importance}</span></td>
+                        </tr>
+                    `;
+                });
+
+                phaseHTML += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                contentDiv.innerHTML += phaseHTML;
+            });
+        }
+        
+        // Initial setup on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            handleRoadmapGeneration();
+        });
+    </script>
+</body>
+</html>

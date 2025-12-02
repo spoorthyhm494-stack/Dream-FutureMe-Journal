@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FutureMe Journal - Write to Your Future Self</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background: #0a0a0a;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(-45deg, #ff6b6b, #ee5a6f, #c06c84, #6c5b7b, #355c7d);
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+    
+        .time-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(70px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 450px;
+            height: 450px;
+            background: #ff6b6b;
+            top: 10%;
+            left: 5%;
+            animation: floatOrb 12s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: #c06c84;
+            bottom: 10%;
+            right: 5%;
+            animation: floatOrb 14s ease-in-out infinite reverse;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: #6c5b7b;
+            top: 50%;
+            right: 20%;
+            animation: floatOrb 16s ease-in-out infinite;
+        }
+
+        @keyframes floatOrb {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(80px, -80px) scale(1.15);
+            }
+            66% {
+                transform: translate(-60px, 60px) scale(0.85);
+            }
+        }
+
+        .clock-particle {
+            position: fixed;
+            font-size: 2rem;
+            opacity: 0.2;
+            pointer-events: none;
+            animation: floatClock 20s linear infinite;
+        }
+
+        @keyframes floatClock {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+    
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 1.2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideDown 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .nav-item:hover::before,
+        .nav-item.active::before {
+            width: 100%;
+        }
+
+    
+        .futureme-container {
+            padding: 4rem 0;
+            min-height: 80vh;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-size: 3.5rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% {
+                text-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                text-shadow: 0 0 60px rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        .container > p {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .message-form {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 1s ease 0.4s both;
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .message-form::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a6f, #c06c84, #6c5b7b, #ff6b6b);
+            background-size: 400%;
+            border-radius: 30px;
+            z-index: -1;
+            animation: borderGlow 8s linear infinite;
+            filter: blur(12px);
+            opacity: 0.6;
+        }
+
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+
+        .form-control {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        label {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        textarea,
+        input[type="date"],
+        input[type="text"] {
+            padding: 1.2rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.4s ease;
+            color: #333;
+        }
+
+        textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        textarea:focus,
+        input:focus {
+            outline: none;
+            border-color: transparent;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5),
+                        0 10px 40px rgba(255, 107, 107, 0.4);
+            transform: translateY(-3px);
+            background: white;
+        }
+
+        .btn {
+            padding: 1.3rem 3rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f, #c06c84);
+            background-size: 200%;
+            color: white;
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.5);
+            animation: buttonPulse 2s ease infinite;
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% {
+                box-shadow: 0 15px 40px rgba(255, 107, 107, 0.5);
+            }
+            50% {
+                box-shadow: 0 20px 50px rgba(255, 107, 107, 0.7);
+            }
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.02);
+            background-position: 100%;
+        }
+
+        h3 {
+            color: white;
+            font-size: 2rem;
+            margin: 4rem 0 2rem;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .scheduled-messages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            animation: fadeInUp 1s ease 0.8s both;
+        }
+
+        .message-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            border-radius: 20px;
+            border-left: 5px solid #ff6b6b;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            animation: cardSlideIn 0.6s ease both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .message-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-left-color: #c06c84;
+        }
+
+        .message-card::before {
+            content: '⏰';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+            opacity: 0.3;
+            animation: clockSpin 10s linear infinite;
+        }
+
+        @keyframes clockSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .message-card h4 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .message-card p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .message-card small {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 107, 107, 0.3);
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+    
+        .sparkle {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkleFloat 2s ease forwards;
+            z-index: 999;
+        }
+
+        @keyframes sparkleFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-120px) scale(0);
+            }
+        }
+
+        
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem 4rem;
+            border-radius: 30px;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            text-align: center;
+            animation: successPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        @keyframes successPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+   
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 2.5rem;
+            }
+
+            .message-form {
+                padding: 2rem;
+            }
+
+            .scheduled-messages-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+ 
+    <div class="time-orb orb-1"></div>
+    <div class="time-orb orb-2"></div>
+    <div class="time-orb orb-3"></div>
+
+    <header class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">DreamDecoder</a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-item">Home</a>
+                <a href="dreamnote.html" class="nav-item">Dream Note</a>
+                <a href="decoder.html" class="nav-item">Dream Decoder</a>
+                <a href="futureme.html" class="nav-item active">FutureMe</a>
+                <a href="journal.html" class="nav-item">Journal</a>
+                <a href="roadmap.html" class="nav-item">Roadmap</a>
+                <a href="progress.html" class="nav-item">Progress</a>
+                <a href="settings.html" class="nav-item">Settings</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="futureme-container">
+        <div class="container">
+            <h2>⏳ FutureMe Journal</h2>
+            <p>Write a message, set a date, and we'll save it for your future self.</p>
+
+            <div class="message-form">
+                <div class="form-control">
+                    <label for="futureMessage">💌 Your Message to the Future</label>
+                    <textarea id="futureMessage" placeholder="What are your goals? What advice do you have for Future You?"></textarea>
+                </div>
+
+                <div class="form-control">
+                    <label for="futureDate">📅 Date to Receive</label>
+                    <input type="date" id="futureDate">
+                </div>
+                
+                <button class="btn btn-primary" onclick="saveFutureMessage()">🚀 Save Message to Future</button>
+            </div>
+
+            <h3>📬 Scheduled Messages</h3>
+            <div id="scheduledMessagesGrid" class="scheduled-messages-grid"></div>
+        </div>
+    </main>
+
+    <script>
+     
+        function createClockParticles() {
+            const clocks = ['🕐', '🕑', '🕒', '🕓', '🕔', '🕕', '⏰', '⏳', '⌛'];
+            for (let i = 0; i < 8; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'clock-particle';
+                particle.textContent = clocks[Math.floor(Math.random() * clocks.length)];
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                document.body.appendChild(particle);
+            }
+        }
+
+        createClockParticles();
+
+        document.getElementById('futureMessage').addEventListener('focus', function(e) {
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    createSparkle(e.target);
+                }, i * 80);
+            }
+        });
+
+        document.getElementById('futureDate').addEventListener('focus', function(e) {
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    createSparkle(e.target);
+                }, i * 80);
+            }
+        });
+
+        function createSparkle(element) {
+            const rect = element.getBoundingClientRect();
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = (rect.left + Math.random() * rect.width) + 'px';
+            sparkle.style.top = (rect.top + Math.random() * rect.height) + 'px';
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 2000);
+        }
+
+     
+        document.addEventListener('DOMContentLoaded', loadFutureMessages);
+
+        function loadFutureMessages() {
+            const messages = JSON.parse(localStorage.getItem('futureMessages') || '[]');
+            const grid = document.getElementById('scheduledMessagesGrid');
+            grid.innerHTML = '';
+
+            if (messages.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: rgba(255,255,255,0.8); font-size: 1.1rem;">You have no scheduled messages yet. Start writing to your future self! ✨</p>';
+                return;
+            }
+
+            messages.forEach((msg, index) => {
+                const card = document.createElement('div');
+                card.className = 'message-card';
+                card.style.animationDelay = (index * 0.1) + 's';
+                card.innerHTML = `
+                    <h4>📅 ${msg.date}</h4>
+                    <p>${msg.preview}</p>
+                    <small>⏰ Status: Pending</small>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function saveFutureMessage() {
+            const message = document.getElementById('futureMessage').value;
+            const date = document.getElementById('futureDate').value;
+            
+            if (message.trim() === "" || date === "") {
+                showError("Please write a message and select a future date.");
+                return;
+            }
+
+            const today = new Date().toISOString().split('T')[0];
+            if (date <= today) {
+                showError("Please select a date in the future!");
+                return;
+            }
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = Math.random() * window.innerWidth + 'px';
+                    sparkle.style.top = Math.random() * window.innerHeight + 'px';
+                    document.body.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 2000);
+                }, i * 30);
+            }
+
+            const savedMessages = JSON.parse(localStorage.getItem('futureMessages') || '[]');
+            
+            const newMessage = {
+                id: Date.now(),
+                date: date,
+                fullMessage: message,
+                preview: message.substring(0, 80) + (message.length > 80 ? '...' : ''),
+                sent: false
+            };
+
+            savedMessages.push(newMessage);
+            localStorage.setItem('futureMessages', JSON.stringify(savedMessages));
+            
+        
+            showSuccess();
+            
+            document.getElementById('futureMessage').value = '';
+            document.getElementById('futureDate').value = '';
+            
+            setTimeout(() => {
+                loadFutureMessages();
+            }, 1500);
+        }
+
+        function showSuccess() {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.innerHTML = `
+                <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+                <h2 style="color: #ff6b6b; margin-bottom: 1rem;">Message Saved!</h2>
+                <p style="color: #666; font-size: 1.1rem;">Future You will be so happy! 💌</p>
+            `;
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+                successDiv.style.animation = 'successPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) reverse forwards';
+                setTimeout(() => successDiv.remove(), 400);
+            }, 1500);
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'success-message';
+            errorDiv.innerHTML = `
+                <div style="font-size: 4rem; margin-bottom: 1rem;">⚠️</div>
+                <h2 style="color: #ff6b6b; margin-bottom: 1rem;">Oops!</h2>
+                <p style="color: #666; font-size: 1.1rem;">${message}</p>
+            `;
+            document.body.appendChild(errorDiv);
+            
+            setTimeout(() => {
+                errorDiv.style.animation = 'successPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) reverse forwards';
+                setTimeout(() => errorDiv.remove(), 400);
+            }, 2000);
+        }
+
+       
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.95) {
+                const trail = document.createElement('div');
+                trail.style.position = 'fixed';
+                trail.style.left = e.clientX + 'px';
+                trail.style.top = e.clientY + 'px';
+                trail.style.width = '3px';
+                trail.style.height = '3px';
+                trail.style.background = 'rgba(255, 255, 255, 0.6)';
+                trail.style.borderRadius = '50%';
+                trail.style.pointerEvents = 'none';
+                trail.style.zIndex = '999';
+                trail.style.animation = 'fadeOut 1s ease forwards';
+                document.body.appendChild(trail);
+                setTimeout(() => trail.remove(), 1000);
+            }
+        });
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                to {
+                    opacity: 0;
+                    transform: scale(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
