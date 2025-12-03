@@ -159,7 +159,7 @@
 
         @keyframes titleGlow {
             0%, 100% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.3); }
-            50%   { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2), 0 0 40px rgba(255, 255, 255, 0.5); }
+            50% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2), 0 0 40px rgba(255, 255, 255, 0.5); }
         }
 
         .dream-form {
@@ -198,8 +198,8 @@
         }
 
         @keyframes shimmer {
-            0%   { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%)  translateY(100%)  rotate(45deg); }
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
         .form-group {
@@ -259,6 +259,7 @@
             min-height: 150px;
         }
 
+        /* Mood Selector */
         .mood-selector {
             display: flex;
             gap: 12px;
@@ -311,6 +312,7 @@
             box-shadow: 0 5px 15px rgba(92, 103, 242, 0.4);
         }
 
+        /* Save Button */
         #save-dream-btn {
             display: block;
             width: 100%;
@@ -355,6 +357,7 @@
             box-shadow: 0 5px 15px rgba(255, 126, 95, 0.4);
         }
 
+        /* Message Box */
         #message {
             margin-top: 20px;
             padding: 15px;
@@ -389,6 +392,7 @@
             border-left: 4px solid #dc3545;
         }
 
+        /* Responsive Design */
         @media (max-width: 768px) {
             .dream-form {
                 padding: 25px;
@@ -408,6 +412,7 @@
             }
         }
 
+        /* Floating stars animation */
         .star {
             position: fixed;
             width: 2px;
@@ -420,31 +425,31 @@
 
         @keyframes twinkle {
             0%, 100% { opacity: 0; }
-            50%      { opacity: 1; }
+            50% { opacity: 1; }
         }
     </style>
 </head>
 <body>
     <header class="navbar">
-        <div class="container nav-content">
-            <a href="index.html" class="logo">DreamDecoder</a>
-            <nav class="nav-links">
-                <a href="index.html" class="nav-item">Home</a>
-                <a href="dreamnote.html" class="nav-item">Dream Note</a>
-                <a href="decoder.html" class="nav-item">Dream Decoder</a>
-                <a href="futureme.html" class="nav-item">FutureMe</a>
-                <a href="journal.html" class="nav-item">Journal</a>
-                <a href="roadmap.html" class="nav-item">Roadmap</a>
-                <a href="progress.html" class="nav-item active">Progress</a>
-            </nav>
-            <a href="settings.html" class="nav-item">Settings</a>
+    <div class="container nav-content">
+        <a href="index.html" class="logo">DreamDecoder</a>
+       <nav class="nav-links">
+    <a href="index.html" class="nav-item">Home</a>
+    <a href="dreamnote.html" class="nav-item">Dream Note</a>
+    <a href="decoder.html" class="nav-item">Dream Decoder</a>
+    <a href="futureme.html" class="nav-item">FutureMe</a>
+    <a href="journal.html" class="nav-item">Journal</a>
+    <a href="roadmap.html" class="nav-item">Roadmap</a>
+    <a href="progress.html" class="nav-item active">Progress</a>  </nav>
+    <a href="settings.html" class="nav-item">Settings</a>
+ 
         </div>
-    </header>
-
+</header>
     <main class="dream-note-container">
         <div class="container">
             <h2>🌙 Log Your Dream Note</h2>
             <div class="dream-form">
+                
                 <div class="form-group">
                     <label for="dream-title">Title (Optional)</label>
                     <input type="text" id="dream-title" placeholder="The Flying Whale">
@@ -469,12 +474,14 @@
                 </div>
                 
                 <button id="save-dream-btn">Save Dream & Analyze</button>
+
                 <div id="message"></div>
             </div>
         </div>
     </main>
 
     <script>
+    
         function createStars() {
             for (let i = 0; i < 50; i++) {
                 const star = document.createElement('div');
@@ -496,12 +503,16 @@
 
             moodButtons.forEach(button => {
                 button.addEventListener('click', () => {
+                 
                     moodButtons.forEach(btn => btn.classList.remove('selected'));
+                    
+                
                     button.classList.add('selected');
                     selectedMoodInput.value = button.getAttribute('data-mood');
                 });
             });
 
+          
             saveButton.addEventListener('click', () => {
                 const title = document.getElementById('dream-title').value;
                 const text = dreamText.value.trim();
@@ -521,14 +532,16 @@
                     status: 'Saved'
                 };
 
+            
                 console.log("Dream Saved:", dreamEntry);
 
                 showMessage(`Dream "${dreamEntry.title}" saved successfully! Mood: ${dreamEntry.mood}.`, 'success');
-                
+          
                 document.getElementById('dream-title').value = '';
                 dreamText.value = '';
                 moodButtons.forEach(btn => btn.classList.remove('selected'));
                 selectedMoodInput.value = '';
+ 
             });
 
             function showMessage(text, type) {
@@ -536,6 +549,7 @@
                 messageDiv.style.display = 'block';
                 messageDiv.className = type;
                 
+            
                 setTimeout(() => {
                     messageDiv.style.display = 'none';
                 }, 5000);
