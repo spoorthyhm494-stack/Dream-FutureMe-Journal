@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* CSS Variables */
+      
         :root {
             --color-primary: #5c67f2;
             --color-secondary: #ff7e5f;
@@ -19,7 +19,7 @@
             --header-height: 70px;
         }
 
-        /* General Styles */
+    
         body { 
             font-family: 'Poppins', sans-serif; 
             line-height: 1.6; 
@@ -40,7 +40,7 @@
         
         .container { width: 90%; max-width: 1000px; margin: 0 auto; }
         
-        /* Navbar Styles */
+    
         .navbar {
             background: var(--navbar-bg-gradient);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -121,7 +121,7 @@
             width: calc(100% + 10px);
         }
 
-        /* Roadmap Layout */
+   
         .roadmap-container { padding: 4rem 0; min-height: calc(100vh - var(--header-height)); }
         
         .roadmap-container h2 { 
@@ -149,7 +149,7 @@
             animation: fadeIn 1s ease-out 0.3s backwards;
         }
         
-        /* Phase Styling */
+  
         .phase { 
             margin-bottom: 3rem; 
             padding: 2rem; 
@@ -206,7 +206,6 @@
             background-clip: text;
         }
         
-        /* Table Styling */
         .feature-table { 
             width: 100%; 
             border-collapse: separate; 
@@ -244,7 +243,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
-        /* Importance Highlighting */
+     
         .importance-high { 
             font-weight: 700; 
             color: white;
@@ -279,7 +278,7 @@
             50% { transform: scale(1.05); }
         }
 
-        /* User Input Form Styles */
+    
         #input-form { 
             padding: 2.5rem; 
             border: none; 
@@ -373,7 +372,7 @@
             transform: translateY(-1px) scale(0.98);
         }
 
-        /* Loading State & Animations */
+
         #roadmap-content { 
             min-height: 200px; 
             display: flex; 
@@ -434,7 +433,6 @@
             }
         }
 
-        /* Staggered animation for roadmap phases */
         .phase:nth-child(1) { animation-delay: 0.1s; }
         .phase:nth-child(2) { animation-delay: 0.3s; }
         .phase:nth-child(3) { animation-delay: 0.5s; }
@@ -495,9 +493,7 @@
     </main>
 
     <script>
-        /**
-         * Simulates the AI/backend process by collecting user input and returning structured data.
-         */
+      
         function generateAIData(goal, level, timeline, description) {
             return {
                 goal: goal,
@@ -539,9 +535,8 @@
             };
         }
 
-        /**
-         * Handles button click, retrieves user input, and triggers the loading process.
-         */
+        
+
         function handleRoadmapGeneration() {
             const goal = document.getElementById('goal-topic').value || "Undefined Goal";
             const level = document.getElementById('current-level').value;
@@ -549,31 +544,26 @@
             const description = document.getElementById('description').value;
 
             const contentDiv = document.getElementById('roadmap-content');
-            
-            // Show loading state
+       
             contentDiv.innerHTML = `<i class="fas fa-spinner"></i> Generating personalized roadmap for <strong>${goal}</strong>...`;
 
-            // Simulate AI/Network delay (1 second)
+            
             setTimeout(() => {
                 const data = generateAIData(goal, level, timeline, description);
                 loadRoadmap(data);
             }, 1000);
         }
 
-        /**
-         * Renders the roadmap dynamically based on the structured data object.
-         */
+     
         function loadRoadmap(data) {
             const contentDiv = document.getElementById('roadmap-content');
-            
-            // 1. Update Title and Summary
+   
             document.getElementById('roadmap-title').innerHTML = `🚀 Roadmap: ${data.goal}`;
             document.getElementById('roadmap-summary').innerHTML = `<strong>Level:</strong> ${data.level} | <strong>Timeline:</strong> ${data.timeline} <br> ${data.description}`;
             
-            // 2. Clear placeholder content
+    
             contentDiv.innerHTML = ''; 
 
-            // 3. Iterate through phases and build the HTML
             data.phases.forEach((phase, phaseIndex) => {
                 let phaseHTML = `
                     <div class="phase">
@@ -586,7 +576,6 @@
                             <tbody>
                 `;
 
-                // Build table rows for features
                 phase.features.forEach(feature => {
                     const importanceClass = 'importance-' + feature.importance.toLowerCase(); 
                     
